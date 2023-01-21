@@ -13,50 +13,6 @@ const execShell = (cmd: string) =>
   });
 
 export function activate(context: vscode.ExtensionContext) {
-  /* let sync = vscode.commands.registerCommand(
-    "flutterflow-code.sync",
-    async () => {
-      let token = process.env.FLUTTERFLOW_API_TOKEN;
-      let projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID;
-      try {
-        if (token === "" || token === undefined) {
-          vscode.window.showErrorMessage(
-            "Your FlutterFlow API token is not set. Please set the FLUTTERFLOW_API_TOKEN environment variable"
-          );
-          const err = "FlutterFlow API token not set";
-          throw err;
-        }
-        if (projectId === "" || projectId === undefined) {
-          vscode.window.showErrorMessage(
-            "Your flutterflow project ID not set. Please set the FLUTTERFLOW_ACTIVE_PROJECT environment variable"
-          );
-          const err = "FlutterFlow project ID not set";
-          throw err;
-        }
-        const activateCli = await execShell(
-          "dart pub global activate flutterflow_cli"
-        );
-        const syncCode = await execShell(
-          `dart pub global run --project ${projectId} --dest .. --include-assets --token ${token}`
-        );
-
-        vscode.window.showInformationMessage("Code sync successful");
-        console.log(sync);
-      } catch (err) {
-        console.error(`
-		Could not sync code \n
-		${err}
-		  `);
-        vscode.window.showErrorMessage(`Could not sync code \n
-		${err}
-		  `);
-        console.error(err);
-      }
-    }
-  );
-  context.subscriptions.push(sync);
-  */
-
   let sync = vscode.commands.registerCommand(
     "flutterflow-code.sync",
     async () => {
