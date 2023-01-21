@@ -16,6 +16,9 @@ export function activate(context: vscode.ExtensionContext) {
   let sync = vscode.commands.registerCommand(
     "flutterflow-code.sync",
     async () => {
+      vscode.window.showInformationMessage(
+        "Starting flutterflow code download..."
+      );
       const token =
         process.env.FLUTTERFLOW_API_TOKEN ||
         vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
@@ -30,21 +33,21 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         if (token === "" || token === undefined) {
           vscode.window.showErrorMessage(
-            "Your FlutterFlow API token is not set. Please set the FLUTTERFLOW_API_TOKEN environment variable"
+            "Your FlutterFlow API token is not set. Please set in vscode settings."
           );
           const err = "FlutterFlow API token not set";
           throw err;
         }
         if (projectId === "" || projectId === undefined) {
           vscode.window.showErrorMessage(
-            "Your flutterflow project ID not set. Please set the FLUTTERFLOW_ACTIVE_PROJECT environment variable"
+            "Your flutterflow project ID not set. Please set Please set in vscode settings."
           );
           const err = "FlutterFlow project ID not set";
           throw err;
         }
         if (path === "" || path === undefined) {
           vscode.window.showErrorMessage(
-            "Your flutterflow working directory is not set. Please set the FLUTTERFLOW_WORKING_DIR environment variable"
+            "Your flutterflow working directory is not set. Please set in vscode settings."
           );
           const err = "FlutterFlow working directory not set";
           throw err;
@@ -70,14 +73,14 @@ export function activate(context: vscode.ExtensionContext) {
 
         await execShell(`rm -rf ${path}/${randomPath}`);
 
-        vscode.window.showInformationMessage("Code sync successful");
+        vscode.window.showInformationMessage("Code download successful");
         console.log(sync);
       } catch (err) {
         console.error(`
 		Could not sync code \n
 		${err}
 		  `);
-        vscode.window.showErrorMessage(`Could not sync code \n
+        vscode.window.showErrorMessage(`Could not download code \n
 		${err}
 		  `);
         console.error(err);

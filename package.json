@@ -1,6 +1,6 @@
 {
-  "name": "flutterflow-code-sync",
-  "displayName": "FlutterFlow Code Sync",
+  "name": "flutterflow-code-export",
+  "displayName": "FlutterFlow Code Export",
   "description": "Allows to easily manage code exports for your flutterflow projects.",
   "icon": "images/icon.png",
   "publisher": "krabhishek",
@@ -23,18 +23,16 @@
     "commands": [
       {
         "command": "flutterflow-code.sync",
-        "title": "Sync flutterflow project code"
+        "title": "Download flutterflow project code."
       }
     ],
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "flutterflow-sidebar-view",
-          "title": "FlutterFlow Code Sync",
-          "icon": "images/icon.png"
-        }
-      ]
-    },
+    "keybindings": [
+      {
+        "command": "flutterflow-code.sync",
+        "key": "ctrl+alt+shift+f",
+        "mac": "cmd+ctrl+shift+f"
+      }
+    ],
     "configuration": {
       "title": "FlutterFlow",
       "properties": {

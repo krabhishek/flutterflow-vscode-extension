@@ -14,6 +14,7 @@ const execShell = (cmd) => new Promise((resolve, reject) => {
 });
 function activate(context) {
     let sync = vscode.commands.registerCommand("flutterflow-code.sync", async () => {
+        vscode.window.showInformationMessage("Starting flutterflow code download...");
         const token = process.env.FLUTTERFLOW_API_TOKEN ||
             vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
         const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
@@ -24,17 +25,17 @@ function activate(context) {
                 .get("workingDirectory");
         try {
             if (token === "" || token === undefined) {
-                vscode.window.showErrorMessage("Your FlutterFlow API token is not set. Please set the FLUTTERFLOW_API_TOKEN environment variable");
+                vscode.window.showErrorMessage("Your FlutterFlow API token is not set. Please set in vscode settings.");
                 const err = "FlutterFlow API token not set";
                 throw err;
             }
             if (projectId === "" || projectId === undefined) {
-                vscode.window.showErrorMessage("Your flutterflow project ID not set. Please set the FLUTTERFLOW_ACTIVE_PROJECT environment variable");
+                vscode.window.showErrorMessage("Your flutterflow project ID not set. Please set Please set in vscode settings.");
                 const err = "FlutterFlow project ID not set";
                 throw err;
             }
             if (path === "" || path === undefined) {
-                vscode.window.showErrorMessage("Your flutterflow working directory is not set. Please set the FLUTTERFLOW_WORKING_DIR environment variable");
+                vscode.window.showErrorMessage("Your flutterflow working directory is not set. Please set in vscode settings.");
                 const err = "FlutterFlow working directory not set";
                 throw err;
             }
@@ -48,7 +49,7 @@ function activate(context) {
             folderName = folderName.trim();
             await await execShell(`cp -rf ${path}/${randomPath}/${folderName}/ ${path}`);
             await execShell(`rm -rf ${path}/${randomPath}`);
-            vscode.window.showInformationMessage("Code sync successful");
+            vscode.window.showInformationMessage("Code download successful");
             console.log(sync);
         }
         catch (err) {
@@ -56,7 +57,7 @@ function activate(context) {
 		Could not sync code \n
 		${err}
 		  `);
-            vscode.window.showErrorMessage(`Could not sync code \n
+            vscode.window.showErrorMessage(`Could not download code \n
 		${err}
 		  `);
             console.error(err);

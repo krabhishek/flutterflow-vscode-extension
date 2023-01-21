@@ -1,10 +1,10 @@
-# flutterflow-code README
+# flutterflow-code-download README
 
-FlutterFlow Code Sync
+FlutterFlow Code Download
 
 ## Features
 
-Sync code with FlutterFlow Project
+Download code of your FlutterFlow Project to run locally.
 
 
 
@@ -18,6 +18,7 @@ This extension contributes the following settings:
 
 * `flutterflow.userApiToken`: Set the FlutterFlow API token.
 * `flutterflow.activeProject`: Set the active project ID to sync.
+* `flutterflow.workingDirectory`: Full path to a local folder that you want to use to download 
 
 ## Known Issues
 
