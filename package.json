@@ -1,0 +1,77 @@
+{
+  "name": "flutterflow-code",
+  "displayName": "FlutterFlow Code",
+  "description": "Allows to easily manage code exports for your flutterflow projects.",
+  "icon": "images/icon.png",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/krabhishek/flutterflow-vscode-extension.git"
+  },
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.74.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onCommand:flutterflow-code.sync"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "flutterflow-code.sync",
+        "title": "Sync flutterflow project code"
+      }
+    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "flutterflow-sidebar-view",
+          "title": "FlutterFlow Code Sync",
+          "icon": "images/icon.png"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "FlutterFlow",
+      "properties": {
+        "flutterflow.userApiToken": {
+          "type": "string",
+          "default": false,
+          "description": "Your FlutterFlow API Token. You can find it on your API token in your flutteflow account page."
+        },
+        "flutterflow.activeProject": {
+          "type": "string",
+          "default": false,
+          "description": "Your flutterflow project you want to sync."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile && npm run lint",
+    "lint": "eslint src --ext ts",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/glob": "^8.0.0",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "16.x",
+    "@types/vscode": "^1.74.0",
+    "@typescript-eslint/eslint-plugin": "^5.45.0",
+    "@typescript-eslint/parser": "^5.45.0",
+    "@vscode/test-electron": "^2.2.0",
+    "eslint": "^8.28.0",
+    "glob": "^8.0.3",
+    "mocha": "^10.1.0",
+    "typescript": "^4.9.3"
+  },
+  "dependencies": {
+    "child_process": "^1.0.2"
+  }
+}
