@@ -16,12 +16,17 @@ export function activate(context: vscode.ExtensionContext) {
   let sync = vscode.commands.registerCommand(
     "flutterflow-code.sync",
     async () => {
-      let token =
+      const token =
         process.env.FLUTTERFLOW_API_TOKEN ||
         vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
-      let projectId =
+      const projectId =
         process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
         vscode.workspace.getConfiguration("flutterflow").get("activeProject");
+      let path =
+        process.env.FLUTTERFLOW_WORKING_DIR ||
+        vscode.workspace
+          .getConfiguration("flutterflow")
+          .get("workingDirectory");
       try {
         if (token === "" || token === undefined) {
           vscode.window.showErrorMessage(
@@ -37,21 +42,36 @@ export function activate(context: vscode.ExtensionContext) {
           const err = "FlutterFlow project ID not set";
           throw err;
         }
+        if (path === "" || path === undefined) {
+          vscode.window.showErrorMessage(
+            "Your flutterflow working directory is not set. Please set the FLUTTERFLOW_WORKING_DIR environment variable"
+          );
+          const err = "FlutterFlow working directory not set";
+          throw err;
+        }
+        if (path.startsWith("$")) {
+          path = process.env.PWD;
+        }
         const activateCli = await execShell(
           "dart pub global activate flutterflow_cli"
         );
-        const path = `${
-          __dirname.split("vscode/flutterflow-vscode-extension/out")[0]
-        }`;
 
-        console.log(path);
-        const syncCode = await execShell(
-          `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${path} --include-assets --token ${token}`
+        const randomPath = Math.floor(Math.random() * 100000000);
+
+        await execShell(
+          `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${path}/${randomPath} --include-assets --token ${token}`
         );
+        let folderName = await execShell(`cd ${path}/${randomPath} && ls`);
+        folderName = folderName.trim();
+
+        await await execShell(
+          `cp -rf ${path}/${randomPath}/${folderName}/ ${path}`
+        );
+
+        await execShell(`rm -rf ${path}/${randomPath}`);
 
         vscode.window.showInformationMessage("Code sync successful");
         console.log(sync);
-        vscode.window.showInformationMessage(`${token} / ${projectId}`);
       } catch (err) {
         console.error(`
 		Could not sync code \n

@@ -1,6 +1,6 @@
 {
-  "name": "flutterflow-code",
-  "displayName": "FlutterFlow Code",
+  "name": "flutterflow-code-sync",
+  "displayName": "FlutterFlow Code Sync",
   "description": "Allows to easily manage code exports for your flutterflow projects.",
   "icon": "images/icon.png",
   "publisher": "krabhishek",
@@ -40,13 +40,15 @@
       "properties": {
         "flutterflow.userApiToken": {
           "type": "string",
-          "default": false,
           "description": "Your FlutterFlow API Token. You can find it on your API token in your flutteflow account page."
         },
         "flutterflow.activeProject": {
           "type": "string",
-          "default": false,
           "description": "Your flutterflow project you want to sync."
+        },
+        "flutterflow.workingDirectory": {
+          "type": "string",
+          "description": "Full path of directory where you want the code to be saved. Usually the folder that is open in VScode."
         }
       }
     }
