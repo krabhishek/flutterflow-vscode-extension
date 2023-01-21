@@ -3,6 +3,7 @@
   "displayName": "FlutterFlow Code",
   "description": "Allows to easily manage code exports for your flutterflow projects.",
   "icon": "images/icon.png",
+  "publisher": "krabhishek",
   "repository": {
     "type": "git",
     "url": "https://github.com/krabhishek/flutterflow-vscode-extension.git"
