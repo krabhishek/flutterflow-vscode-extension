@@ -1,10 +1,12 @@
-# flutterflow-code-download README
+# FlutterFlow Code Download
 
-FlutterFlow Code Download
+Simple plugin to easily download your flutterflow project code.
+
+**This is not an official FlutterFlow plugin**
 
 ## Features
 
-Download code of your FlutterFlow Project to run locally.
+Download code of your FlutterFlow Project to run locally. 
 
 
 
@@ -22,14 +24,14 @@ This extension contributes the following settings:
 
 ## Known Issues
 
-Calling out known issues can help limit users opening duplicate issues against your extension.
+Please raise issues at : https://github.com/krabhishek/flutterflow-vscode-extension/issues
 
 ## Release Notes
 
-Users appreciate release notes as you update your extension.
+* Download project code. Uses flutterflow_cli
 
 ### 0.0.1
 
-Initial release of FlutterFlow Code Sync
+Initial release of FlutterFlow Code Export plugin
 
 **Enjoy!**
