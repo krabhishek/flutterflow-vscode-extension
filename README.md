@@ -6,13 +6,14 @@ Simple plugin to easily download your flutterflow project code.
 
 ## Features
 
-Download code of your FlutterFlow Project to run locally. 
+Download code of your FlutterFlow Project
 
-
+* Run code locally (no more waiting for test mode)
+* Better control over code management (works even without github)
 
 ## Requirements
 
-dart and flutter need to be installed and should be in PATH
+dart and flutter need to be installed and dart should be in $PATH. 
 
 ## Extension Settings
 
@@ -28,9 +29,12 @@ Please raise issues at : https://github.com/krabhishek/flutterflow-vscode-extens
 
 ## Release Notes
 
-* Download project code. Uses flutterflow_cli
+* Download flutterflow project code. Uses flutterflow_cli : https://pub.dev/packages/flutterflow_cli
 
-### 0.0.1
+### 0.0.3
+
+Added support to download code without assets (can speedup code download for projects with lots of assets)
+### 0.0.2
 
 Initial release of FlutterFlow Code Export plugin
 
