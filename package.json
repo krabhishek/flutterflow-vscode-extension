@@ -16,19 +16,31 @@
     "Other"
   ],
   "activationEvents": [
-    "onCommand:flutterflow-code.sync"
+    "onCommand:flutterflow-code-export.sync",
+    "onCommand:flutterflow-code-export.syncFast"
   ],
   "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "flutterflow-code.sync",
-        "title": "Download flutterflow project code."
+        "command": "flutterflow-code-export.sync",
+        "title": "Download project code with assets",
+        "category": "FlutterFlow Code"
+      },
+      {
+        "command": "flutterflow-code-export.syncFast",
+        "title": "Download project code without assets (faster)",
+        "category": "FlutterFlow Code"
       }
     ],
     "keybindings": [
       {
-        "command": "flutterflow-code.sync",
+        "command": "flutterflow-code-export.sync",
+        "key": "ctrl+alt+shift+s",
+        "mac": "cmd+ctrl+shift+s"
+      },
+      {
+        "command": "flutterflow-code-export.syncFast",
         "key": "ctrl+alt+shift+f",
         "mac": "cmd+ctrl+shift+f"
       }
