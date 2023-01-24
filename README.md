@@ -1,4 +1,4 @@
-# FlutterFlow Code Download
+# FlutterFlow Code Export
 
 Simple plugin to easily download your flutterflow project code.
 
