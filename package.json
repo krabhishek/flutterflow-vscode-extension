@@ -54,11 +54,19 @@
         },
         "flutterflow.activeProject": {
           "type": "string",
-          "description": "Your flutterflow project you want to sync."
+          "description": "Project ID of your flutterflow project to download."
         },
         "flutterflow.workingDirectory": {
           "type": "string",
           "description": "Full path of directory where you want the code to be saved. Usually the folder that is open in VScode."
+        },
+        "flutterflow.openDirectory": {
+          "type": "boolean",
+          "description": "Open the working directory after downloading code."
+        },
+        "flutterflow.useGit": {
+          "type": "boolean",
+          "description": "Use git constructs in your working directory."
         }
       }
     }
