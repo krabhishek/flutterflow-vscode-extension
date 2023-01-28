@@ -1,7 +1,6 @@
 import * as cp from "child_process";
 
-// this function would execute the shell commands
-export const execShell = (cmd: string) =>
+const execShell = (cmd: string) =>
   new Promise<string>((resolve, reject) => {
     cp.exec(cmd, (err, out) => {
       if (err) {
@@ -10,3 +9,5 @@ export const execShell = (cmd: string) =>
       return resolve(out);
     });
   });
+
+export { execShell };

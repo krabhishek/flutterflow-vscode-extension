@@ -31,6 +31,11 @@
         "command": "flutterflow-code-export.syncFast",
         "title": "Download project code without assets (faster)",
         "category": "FlutterFlow Code"
+      },
+      {
+        "command": "flutterflow-code-export.run",
+        "title": "Start a flutter run session in terminal",
+        "category": "FlutterFlow Code"
       }
     ],
     "keybindings": [
@@ -67,6 +72,10 @@
         "flutterflow.useGit": {
           "type": "boolean",
           "description": "Use git constructs in your working directory."
+        },
+        "flutterflow.device": {
+          "type": "string",
+          "description": "Device ID to be used with flutter run"
         }
       }
     }
@@ -83,6 +92,7 @@
     "@types/glob": "^8.0.0",
     "@types/mocha": "^10.0.1",
     "@types/node": "16.x",
+    "@types/shelljs": "^0.8.11",
     "@types/vscode": "^1.74.0",
     "@typescript-eslint/eslint-plugin": "^5.45.0",
     "@typescript-eslint/parser": "^5.45.0",
@@ -93,6 +103,6 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "child_process": "^1.0.2"
+    "shelljs": "^0.8.5"
   }
 }

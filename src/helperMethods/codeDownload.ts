@@ -1,6 +1,11 @@
 import * as vscode from "vscode";
-import { tmpdir } from "os";
-import { execShell } from "../helperMethods/executeShellCmd";
+import { tmpdir, platform } from "os";
+import * as shell from "shelljs";
+import { execShell } from "./executeShellCmd";
+import { isGitInitalized, shouldStash } from "./gitOperations";
+import { openStdin } from "process";
+
+shell.config.execPath = shell.which("node");
 
 export async function downloadCode(config: { withAssets: boolean }) {
   vscode.window.showInformationMessage("Starting flutterflow code download...");
@@ -10,9 +15,16 @@ export async function downloadCode(config: { withAssets: boolean }) {
   const projectId =
     process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
     vscode.workspace.getConfiguration("flutterflow").get("activeProject");
-  let path =
+  const path =
     process.env.FLUTTERFLOW_WORKING_DIR ||
     vscode.workspace.getConfiguration("flutterflow").get("workingDirectory");
+
+  let useGit =
+    (process.env.FLUTTERFLOW_USE_GIT as unknown as boolean) ||
+    (vscode.workspace
+      .getConfiguration("flutterflow")
+      .get("useGit") as unknown as boolean);
+
   try {
     if (token === "" || token === undefined) {
       vscode.window.showErrorMessage(
@@ -36,27 +48,45 @@ export async function downloadCode(config: { withAssets: boolean }) {
       throw err;
     }
 
-    const activateCli = await execShell(
-      "dart pub global activate flutterflow_cli"
-    );
+    if (useGit === undefined) {
+      useGit = false;
+    }
+
+    execShell("dart pub global activate flutterflow_cli");
 
     const randomPathSuffix = Math.floor(Math.random() * 100000000);
     const tmpPath = `${tmpdir()}/${randomPathSuffix}`;
     if (config.withAssets == true) {
-      await execShell(
+      execShell(
         `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpPath} --include-assets --token ${token}`
       );
     } else {
-      await execShell(
+      execShell(
         `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpPath} --no-include-assets --token ${token}`
       );
     }
+    let folderName;
 
-    const folderName = (await execShell(`cd ${tmpPath} && ls`)).trim();
+    if (platform() === "win32") {
+      folderName = await execShell(`cd ${path}\\${randomPathSuffix} && dir`)
+    } else {
+      folderName = await execShell(`cd ${path}/${randomPathSuffix} && ls`)
+    }
 
-    await execShell(`cp -rf ${tmpPath}/${folderName}/ ${path}`);
 
-    await execShell(`rm -rf ${tmpPath}`);
+    if (useGit) {
+      if (!(await isGitInitalized(path))) {
+        console.log("got not initialized");
+        await execShell(`cd ${path} && git init`);
+      }
+      if (!(await shouldStash(path))) {
+        execShell("git stash");
+      }
+    }
+
+    if()
+
+    shell.rm("-rf", `${tmpPath}/${folderName}`);
 
     vscode.window.showInformationMessage("Code download successful");
   } catch (err) {
