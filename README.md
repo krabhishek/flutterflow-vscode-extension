@@ -19,9 +19,12 @@ dart and flutter need to be installed and dart should be in $PATH.
 
 This extension contributes the following settings:
 
-* `flutterflow.userApiToken`: Set the FlutterFlow API token.
-* `flutterflow.activeProject`: Set the active project ID to sync.
-* `flutterflow.workingDirectory`: Full path to a local folder that you want to use to download 
+* `flutterflow.userApiToken`: Set the FlutterFlow API token
+* `flutterflow.activeProject`: Set the active project ID to sync
+* `flutterflow.baseDirectory`: Full path to a local folder that you want to use to download project code
+* `flutterflow.useGit`: Flag to enable local git repo
+* `flutterflow.openDirectory`: Flag to automatically open downloaded code in a window
+* `flutterflow.device`: Device ID to be used with flutter run -d
 
 ## Known Issues
 
@@ -31,6 +34,9 @@ Please raise issues at : https://github.com/krabhishek/flutterflow-vscode-extens
 
 * Download flutterflow project code. Uses flutterflow_cli : https://pub.dev/packages/flutterflow_cli
 
+### 0.0.4
+Added support for windows devices and use local git repo
+Also added shortcut to start a local debugging session
 ### 0.0.3
 
 Added support to download code without assets (can speedup code download for projects with lots of assets)

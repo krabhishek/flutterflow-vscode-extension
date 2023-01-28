@@ -20,7 +20,7 @@ async function initalizeGit() {
     catch (err) {
         vscode.window.showErrorMessage("Git Initalize failed");
         vscode.window.showErrorMessage(err);
-        throw (err);
+        throw err;
     }
 }
 exports.initalizeGit = initalizeGit;
@@ -54,7 +54,7 @@ async function shouldStash() {
         return shouldStashFlag;
     }
     catch (err) {
-        throw (err);
+        throw err;
     }
 }
 exports.shouldStash = shouldStash;
@@ -68,7 +68,7 @@ async function gitStash() {
     }
     catch (err) {
         vscode.window.showErrorMessage("Could not stashed changes");
-        throw (err);
+        throw err;
     }
 }
 exports.gitStash = gitStash;

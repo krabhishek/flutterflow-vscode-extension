@@ -12,14 +12,21 @@ const downloadCode = async (config) => {
         vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
     const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
         vscode.workspace.getConfiguration("flutterflow").get("activeProject");
-    let useGitFlag = process.env.FLUTTERFLOW_USE_GIT || vscode.workspace.getConfiguration("flutterflow").get("useGit");
-    if (useGitFlag === undefined) {
-        useGitFlag = false;
-    }
-    let path = process.env.FLUTTERFLOW_BASE_DIR ||
+    const useGit = process.env.FLUTTERFLOW_USE_GIT ||
+        vscode.workspace.getConfiguration("flutterflow").get("useGit");
+    const openWindow = process.env.FLUTTERFLOW_OPEN_DIR ||
         vscode.workspace
             .getConfiguration("flutterflow")
-            .get("baseDirectory");
+            .get("openDirectory");
+    let useGitFlag;
+    if (useGit === undefined) {
+        useGitFlag = false;
+    }
+    else {
+        useGitFlag = useGit;
+    }
+    const path = process.env.FLUTTERFLOW_BASE_DIR ||
+        vscode.workspace.getConfiguration("flutterflow").get("baseDirectory");
     try {
         if (token === "" || token === undefined) {
             vscode.window.showErrorMessage("Your FlutterFlow API token is not set. Please set in vscode settings.");
@@ -44,28 +51,45 @@ const downloadCode = async (config) => {
         else {
             downloadPath = `${os.tmpdir()}/flutterflow`;
         }
-        await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --include-assets --token ${token}`);
+        if (config.withAssets == true) {
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --include-assets --token ${token}`);
+        }
+        else {
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --no-include-assets --token ${token}`);
+        }
         const folderName = (0, pathHelpers_1.getProjectFolder)();
         if (useGitFlag) {
             try {
-                if ((await (0, gitHelpers_1.shouldStash)())) {
+                if (await (0, gitHelpers_1.shouldStash)()) {
                     await (0, gitHelpers_1.gitStash)();
                 }
+            }
+            catch (err) {
+                vscode.window.showErrorMessage("Could not stash current files");
+                vscode.window.showErrorMessage(err);
+            }
+        }
+        if (os.platform() == "win32") {
+            await (0, executeShell_1.execShell)(`xcopy /h /i /c /k /e /r /y  ${downloadPath}\\${folderName} ${path}\\${folderName}`);
+            console.log("Copied all files");
+        }
+        else {
+            await (0, executeShell_1.execShell)(`cp -rf ${downloadPath}/${folderName} ${path}/${folderName}`);
+        }
+        if (useGitFlag) {
+            try {
                 if (!(await (0, gitHelpers_1.isGitinitalized)())) {
                     await (0, gitHelpers_1.initalizeGit)();
                 }
             }
             catch (err) {
-                vscode.window.showErrorMessage("Could not initialize git");
+                vscode.window.showErrorMessage("Could initialize git in project directory");
                 vscode.window.showErrorMessage(err);
             }
         }
-        if (os.platform() == 'win32') {
-            await (0, executeShell_1.execShell)(`xcopy /h /i /c /k /e /r /y  ${downloadPath}\\${folderName} ${path}\\${folderName}`);
-            console.log("Copied all files");
-        }
-        else {
-            await (0, executeShell_1.execShell)(`cp -rf ${downloadPath}/${folderName}`);
+        if (openWindow === true) {
+            const folderUri = vscode.Uri.file((0, pathHelpers_1.getProjectWorkingDir)());
+            vscode.commands.executeCommand(`vscode.openFolder`, folderUri);
         }
         vscode.window.showInformationMessage("Code download successful");
     }
