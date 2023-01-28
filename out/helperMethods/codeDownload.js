@@ -48,12 +48,6 @@ async function downloadCode(config) {
             (0, executeShellCmd_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpPath} --no-include-assets --token ${token}`);
         }
         let folderName;
-        if ((0, os_1.platform)() === "win32") {
-            folderName = await (0, executeShellCmd_1.execShell)(`cd ${path}\\${randomPathSuffix} && dir`);
-        }
-        else {
-            folderName = await (0, executeShellCmd_1.execShell)(`cd ${path}/${randomPathSuffix} && ls`);
-        }
         if (useGit) {
             if (!(await (0, gitOperations_1.isGitInitalized)(path))) {
                 console.log("got not initialized");
@@ -63,8 +57,7 @@ async function downloadCode(config) {
                 (0, executeShellCmd_1.execShell)("git stash");
             }
         }
-        if ()
-            shell.rm("-rf", `${tmpPath}/${folderName}`);
+        shell.rm("-rf", `${tmpPath}/${folderName}`);
         vscode.window.showInformationMessage("Code download successful");
     }
     catch (err) {

@@ -67,13 +67,6 @@ export async function downloadCode(config: { withAssets: boolean }) {
     }
     let folderName;
 
-    if (platform() === "win32") {
-      folderName = await execShell(`cd ${path}\\${randomPathSuffix} && dir`)
-    } else {
-      folderName = await execShell(`cd ${path}/${randomPathSuffix} && ls`)
-    }
-
-
     if (useGit) {
       if (!(await isGitInitalized(path))) {
         console.log("got not initialized");
@@ -83,8 +76,6 @@ export async function downloadCode(config: { withAssets: boolean }) {
         execShell("git stash");
       }
     }
-
-    if()
 
     shell.rm("-rf", `${tmpPath}/${folderName}`);
 
