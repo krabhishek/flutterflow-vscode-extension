@@ -31,6 +31,16 @@
         "command": "flutterflow-code-export.syncFast",
         "title": "Download project code without assets (faster)",
         "category": "FlutterFlow Code"
+      },
+      {
+        "command": "flutterflow-code-export.gitInitalize",
+        "title": "Initialize git in project working directory",
+        "category": "FlutterFlow Code"
+      },
+      {
+        "command": "flutterflow-code-export.run",
+        "title": "Start a flutter run session in integrated terminal",
+        "category": "FlutterFlow Code"
       }
     ],
     "keybindings": [
@@ -43,6 +53,11 @@
         "command": "flutterflow-code-export.syncFast",
         "key": "ctrl+alt+shift+f",
         "mac": "cmd+ctrl+shift+f"
+      },
+      {
+        "command": "flutterflow-code-export.run",
+        "key": "ctrl+alt+shift+r",
+        "mac": "cmd+ctrl+shift+r"
       }
     ],
     "configuration": {
@@ -54,11 +69,24 @@
         },
         "flutterflow.activeProject": {
           "type": "string",
-          "description": "Your flutterflow project you want to sync."
+          "description": "Project ID of your flutterflow project to download."
         },
-        "flutterflow.workingDirectory": {
+        "flutterflow.baseDirectory": {
           "type": "string",
-          "description": "Full path of directory where you want the code to be saved. Usually the folder that is open in VScode."
+          "description": "Full path of base directory where you want the code to be saved."
+        },
+        "flutterflow.useGit": {
+          "type": "boolean",
+          "description": "Use git to track changes?"
+        },
+        "flutterflow.openDirectory": {
+          "type": "boolean",
+          "description": "Open the working directory after downloading code.",
+          "default": true
+        },
+        "flutterflow.device": {
+          "type": "string",
+          "description": "Device ID to be used with flutter run"
         }
       }
     }
