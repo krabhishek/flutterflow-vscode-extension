@@ -4,16 +4,22 @@ exports.downloadCode = void 0;
 const vscode = require("vscode");
 const os = require("os");
 const executeShell_1 = require("./executeShell");
+const pathHelpers_1 = require("./pathHelpers");
+const gitHelpers_1 = require("./gitHelpers");
 const downloadCode = async (config) => {
     vscode.window.showInformationMessage("Starting flutterflow code download...");
     const token = process.env.FLUTTERFLOW_API_TOKEN ||
         vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
     const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
         vscode.workspace.getConfiguration("flutterflow").get("activeProject");
-    let path = process.env.FLUTTERFLOW_WORKING_DIR ||
+    let useGitFlag = process.env.FLUTTERFLOW_USE_GIT || vscode.workspace.getConfiguration("flutterflow").get("useGit");
+    if (useGitFlag === undefined) {
+        useGitFlag = false;
+    }
+    let path = process.env.FLUTTERFLOW_BASE_DIR ||
         vscode.workspace
             .getConfiguration("flutterflow")
-            .get("workingDirectory");
+            .get("baseDirectory");
     try {
         if (token === "" || token === undefined) {
             vscode.window.showErrorMessage("Your FlutterFlow API token is not set. Please set in vscode settings.");
@@ -39,9 +45,23 @@ const downloadCode = async (config) => {
             downloadPath = `${os.tmpdir()}/flutterflow`;
         }
         await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --include-assets --token ${token}`);
-        const folderName = projectId.replace("-", "_").slice(0, projectId.lastIndexOf("-"));
+        const folderName = (0, pathHelpers_1.getProjectFolder)();
+        if (useGitFlag) {
+            try {
+                if ((await (0, gitHelpers_1.shouldStash)())) {
+                    await (0, gitHelpers_1.gitStash)();
+                }
+                if (!(await (0, gitHelpers_1.isGitinitalized)())) {
+                    await (0, gitHelpers_1.initalizeGit)();
+                }
+            }
+            catch (err) {
+                vscode.window.showErrorMessage("Could not initialize git");
+                vscode.window.showErrorMessage(err);
+            }
+        }
         if (os.platform() == 'win32') {
-            await (0, executeShell_1.execShell)(`move /Y ${downloadPath}\\${folderName} ${path}`);
+            await (0, executeShell_1.execShell)(`xcopy /h /i /c /k /e /r /y  ${downloadPath}\\${folderName} ${path}\\${folderName}`);
             console.log("Copied all files");
         }
         else {

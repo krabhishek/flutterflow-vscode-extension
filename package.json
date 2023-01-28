@@ -31,6 +31,11 @@
         "command": "flutterflow-code-export.syncFast",
         "title": "Download project code without assets (faster)",
         "category": "FlutterFlow Code"
+      },
+      {
+        "command": "flutterflow-code-export.gitInitalize",
+        "title": "Initialize git in project working directory",
+        "category": "FlutterFlow Code"
       }
     ],
     "keybindings": [
@@ -56,9 +61,13 @@
           "type": "string",
           "description": "Your flutterflow project you want to sync."
         },
-        "flutterflow.workingDirectory": {
+        "flutterflow.baseDirectory": {
           "type": "string",
-          "description": "Full path of directory where you want the code to be saved. Usually the folder that is open in VScode."
+          "description": "Full path of base directory where you want the code to be saved."
+        },
+        "flutterflow.useGit": {
+          "type": "boolean",
+          "description": "Use git to track changes?"
         }
       }
     }
