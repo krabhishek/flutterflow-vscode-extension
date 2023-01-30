@@ -4,7 +4,9 @@ exports.getProjectFolder = exports.validatePathConfig = exports.getProjectWorkin
 const os = require("os");
 const vscode = require("vscode");
 const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
-    vscode.workspace.getConfiguration("flutterflow").get("activeProject");
+    vscode.workspace
+        .getConfiguration("flutterflow")
+        .get("activeProject");
 const baseDir = process.env.FLUTTERFLOW_BASE_DIR ||
     vscode.workspace
         .getConfiguration("flutterflow")
@@ -25,7 +27,10 @@ function getProjectWorkingDir() {
     if (!validatePathConfig()) {
         return undefined;
     }
-    const folderName = projectId.replace("-", "_").slice(0, projectId.lastIndexOf("-"));
+    const folderName = projectId
+        .replace("-", "_")
+        .slice(0, projectId.lastIndexOf("-"))
+        .replace("-", "_");
     if (os.platform() == "win32") {
         return `${baseDir}\\${folderName}`;
     }
@@ -38,7 +43,9 @@ function getProjectFolder() {
     if (!validatePathConfig()) {
         return undefined;
     }
-    const folderName = projectId.replace("-", "_").slice(0, projectId.lastIndexOf("-"));
+    const folderName = projectId
+        .replace("-", "_")
+        .slice(0, projectId.lastIndexOf("-"));
     return folderName;
 }
 exports.getProjectFolder = getProjectFolder;

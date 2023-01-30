@@ -1,6 +1,9 @@
 # Change Log
 
 All notable changes to the "flutterflow-code" extension will be documented in this file.
+
+## [v0.0.5]
+Fixed a folder rename bug
 ## [v0.0.4]
 
 - Added support for windows devices
