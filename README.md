@@ -34,6 +34,8 @@ Please raise issues at : https://github.com/krabhishek/flutterflow-vscode-extens
 
 * Download flutterflow project code. Uses flutterflow_cli : https://pub.dev/packages/flutterflow_cli
 
+### 0.0.6
+Fixed a bug with folder name
 ### 0.0.4
 Added support for windows devices and use local git repo
 Also added shortcut to start a local debugging session

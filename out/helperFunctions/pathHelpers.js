@@ -31,6 +31,7 @@ function getProjectWorkingDir() {
         .replace("-", "_")
         .slice(0, projectId.lastIndexOf("-"))
         .replace("-", "_");
+    console.log(folderName);
     if (os.platform() == "win32") {
         return `${baseDir}\\${folderName}`;
     }
@@ -45,7 +46,8 @@ function getProjectFolder() {
     }
     const folderName = projectId
         .replace("-", "_")
-        .slice(0, projectId.lastIndexOf("-"));
+        .slice(0, projectId.lastIndexOf("-"))
+        .replace("-", "_");
     return folderName;
 }
 exports.getProjectFolder = getProjectFolder;
