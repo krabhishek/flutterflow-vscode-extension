@@ -1,7 +1,11 @@
 import * as vscode from "vscode";
 import * as os from "os";
 import { execShell } from "./executeShell";
-import { getProjectFolder, getProjectWorkingDir } from "./pathHelpers";
+import {
+  getProjectFolder,
+  getProjectWorkingDir,
+  tmpDownloadFolder,
+} from "./pathHelpers";
 import {
   gitStash,
   initalizeGit,
@@ -61,23 +65,16 @@ const downloadCode = async (config: { withAssets: boolean }) => {
     }
     await execShell("dart pub global activate flutterflow_cli");
 
-    let downloadPath;
-    if (os.platform() == "win32") {
-      downloadPath = `%TMP%\\flutterflow`;
-    } else {
-      downloadPath = `${os.tmpdir()}/flutterflow`;
-    }
     if (config.withAssets == true) {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
       );
     } else {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --no-include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
       );
     }
 
-    const folderName = getProjectFolder();
     if (useGitFlag) {
       try {
         if (await shouldStash()) {
@@ -91,12 +88,12 @@ const downloadCode = async (config: { withAssets: boolean }) => {
 
     if (os.platform() == "win32") {
       await execShell(
-        `xcopy /h /i /c /k /e /r /y  ${downloadPath}\\${folderName} ${path}\\${folderName}`
+        `xcopy /h /i /c /k /e /r /y  ${tmpDownloadFolder()}\\${getProjectFolder()} ${getProjectWorkingDir()}`
       );
       console.log("Copied all files");
     } else {
       await execShell(
-        `cp -rf ${downloadPath}/${folderName} ${path}/${folderName}`
+        `cp -rf "${tmpDownloadFolder()}/${getProjectFolder()}/" "${getProjectWorkingDir()}"`
       );
     }
 

@@ -44,20 +44,12 @@ const downloadCode = async (config) => {
             throw err;
         }
         await (0, executeShell_1.execShell)("dart pub global activate flutterflow_cli");
-        let downloadPath;
-        if (os.platform() == "win32") {
-            downloadPath = `%TMP%\\flutterflow`;
-        }
-        else {
-            downloadPath = `${os.tmpdir()}/flutterflow`;
-        }
         if (config.withAssets == true) {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --include-assets --token ${token}`);
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --include-assets --token ${token}`);
         }
         else {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${downloadPath} --no-include-assets --token ${token}`);
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --no-include-assets --token ${token}`);
         }
-        const folderName = (0, pathHelpers_1.getProjectFolder)();
         if (useGitFlag) {
             try {
                 if (await (0, gitHelpers_1.shouldStash)()) {
@@ -70,11 +62,11 @@ const downloadCode = async (config) => {
             }
         }
         if (os.platform() == "win32") {
-            await (0, executeShell_1.execShell)(`xcopy /h /i /c /k /e /r /y  ${downloadPath}\\${folderName} ${path}\\${folderName}`);
+            await (0, executeShell_1.execShell)(`xcopy /h /i /c /k /e /r /y  ${(0, pathHelpers_1.tmpDownloadFolder)()}\\${(0, pathHelpers_1.getProjectFolder)()} ${(0, pathHelpers_1.getProjectWorkingDir)()}`);
             console.log("Copied all files");
         }
         else {
-            await (0, executeShell_1.execShell)(`cp -rf ${downloadPath}/${folderName} ${path}/${folderName}`);
+            await (0, executeShell_1.execShell)(`cp -rf "${(0, pathHelpers_1.tmpDownloadFolder)()}/${(0, pathHelpers_1.getProjectFolder)()}/" "${(0, pathHelpers_1.getProjectWorkingDir)()}"`);
         }
         if (useGitFlag) {
             try {

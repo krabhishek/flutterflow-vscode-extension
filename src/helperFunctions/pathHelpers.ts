@@ -33,15 +33,21 @@ function getProjectWorkingDir(): string | undefined {
   if (!validatePathConfig()) {
     return undefined;
   }
-  const folderName = projectId
-    .replace("-", "_")
-    .slice(0, projectId.lastIndexOf("-"))
-    .replace("-", "_");
-  console.log(folderName);
+
   if (os.platform() == "win32") {
-    return `${baseDir}\\${folderName}`;
+    console.log(`getProjectWorkingDir : ${baseDir}\\${getProjectFolder()} `);
+    return `${baseDir}\\${getProjectFolder()}`;
   } else {
-    return `${baseDir}/${folderName}`;
+    console.log(`getProjectWorkingDir : ${baseDir}/${getProjectFolder()} `);
+    return `${baseDir}/${getProjectFolder()}`;
+  }
+}
+
+function tmpDownloadFolder(): string {
+  if (os.platform() == "win32") {
+    return `%TMP%\\flutterflow`;
+  } else {
+    return `${os.tmpdir()}/flutterflow`;
   }
 }
 
@@ -49,11 +55,16 @@ function getProjectFolder(): string | undefined {
   if (!validatePathConfig()) {
     return undefined;
   }
+  const re = /-/gi;
   const folderName = projectId
-    .replace("-", "_")
-    .slice(0, projectId.lastIndexOf("-"))
-    .replace("-", "_");
+    .replace(re, "_")
+    .slice(0, projectId.lastIndexOf("-"));
   return folderName;
 }
 
-export { getProjectWorkingDir, validatePathConfig, getProjectFolder };
+export {
+  getProjectWorkingDir,
+  validatePathConfig,
+  getProjectFolder,
+  tmpDownloadFolder,
+};

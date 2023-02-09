@@ -11,6 +11,8 @@ Download code of your FlutterFlow Project
 * Run code locally (no more waiting for test mode)
 * Better control over code management (works even without github)
 
+More details are [here](https://community.flutterflow.io/c/show-your-work/vs-code-plugin-for-flutterflow-code-download)
+
 ## Requirements
 
 dart and flutter need to be installed and dart should be in $PATH. 
@@ -34,8 +36,8 @@ Please raise issues at : https://github.com/krabhishek/flutterflow-vscode-extens
 
 * Download flutterflow project code. Uses flutterflow_cli : https://pub.dev/packages/flutterflow_cli
 
-### 0.0.6
-Fixed a bug with folder name
+### 0.0.7
+Fixed a bug with recursive folder
 ### 0.0.4
 Added support for windows devices and use local git repo
 Also added shortcut to start a local debugging session
