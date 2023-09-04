@@ -24,6 +24,10 @@ const downloadCode = async (config: { withAssets: boolean }) => {
   const useGit =
     (process.env.FLUTTERFLOW_USE_GIT as unknown as boolean) ||
     (vscode.workspace.getConfiguration("flutterflow").get("useGit") as boolean);
+  const isEnterpriseIndia =
+    (vscode.workspace
+      .getConfiguration("flutterflow")
+      .get("platformEnterpriseIndia") as boolean) !== true;
 
   const openWindow =
     (process.env.FLUTTERFLOW_OPEN_DIR as unknown as boolean) ||
@@ -65,14 +69,22 @@ const downloadCode = async (config: { withAssets: boolean }) => {
     }
     await execShell("dart pub global activate flutterflow_cli");
 
+    const endpoint = isEnterpriseIndia
+      ? "" // Empty string for default endpoint
+      : "--endpoint 'https://api-enterprise-india.flutterflow.io/v1'";
+
     if (config.withAssets == true) {
-      await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
-      );
+      const exportCommand = isEnterpriseIndia
+        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
+        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token} ${endpoint}`;
+      
+      await execShell(exportCommand);
     } else {
-      await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
-      );
+      const exportCommand = isEnterpriseIndia
+        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
+        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token} ${endpoint}`;
+      
+      await execShell(exportCommand);
     }
 
     if (useGitFlag) {

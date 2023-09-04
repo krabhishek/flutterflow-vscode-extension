@@ -75,6 +75,10 @@
           "type": "string",
           "description": "Full path of base directory where you want the code to be saved."
         },
+        "flutterflow.platformEnterpriseIndia":{
+          "type": "boolean",
+          "description": "Enable this if you are using FlutterFlow Enterprise India platform."
+        },
         "flutterflow.useGit": {
           "type": "boolean",
           "description": "Use git to track changes?"
