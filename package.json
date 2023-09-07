@@ -67,6 +67,10 @@
           "type": "string",
           "description": "Your FlutterFlow API Token. You can find it on your API token in your flutteflow account page."
         },
+        "flutterflow.userApiTokenIndia": {
+          "type": "string",
+          "description": "Your FlutterFlow India API Token. You can find it on your API token in your flutteflow account page."
+        },
         "flutterflow.activeProject": {
           "type": "string",
           "description": "Project ID of your flutterflow project to download."

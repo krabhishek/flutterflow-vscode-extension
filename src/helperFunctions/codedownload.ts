@@ -18,6 +18,9 @@ const downloadCode = async (config: { withAssets: boolean }) => {
   const token =
     process.env.FLUTTERFLOW_API_TOKEN ||
     vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
+    const indiaToken =
+    process.env.FLUTTERFLOW_API_TOKEN ||
+    vscode.workspace.getConfiguration("flutterflow").get("userApiTokenIndia");
   const projectId =
     process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
     vscode.workspace.getConfiguration("flutterflow").get("activeProject");
@@ -27,7 +30,7 @@ const downloadCode = async (config: { withAssets: boolean }) => {
   const isEnterpriseIndia =
     (vscode.workspace
       .getConfiguration("flutterflow")
-      .get("platformEnterpriseIndia") as boolean) !== true;
+      .get("platformEnterpriseIndia") as boolean);
 
   const openWindow =
     (process.env.FLUTTERFLOW_OPEN_DIR as unknown as boolean) ||
@@ -70,19 +73,19 @@ const downloadCode = async (config: { withAssets: boolean }) => {
     await execShell("dart pub global activate flutterflow_cli");
 
     const endpoint = isEnterpriseIndia
-      ? "" // Empty string for default endpoint
-      : "--endpoint 'https://api-enterprise-india.flutterflow.io/v1'";
+      ? "--endpoint 'https://api-enterprise-india.flutterflow.io/v1'" // Empty string for default endpoint
+      : ""; // Empty string for default endpoint
 
     if (config.withAssets == true) {
       const exportCommand = isEnterpriseIndia
-        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
-        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token} ${endpoint}`;
+        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${indiaToken} ${endpoint}`
+        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`;
       
       await execShell(exportCommand);
     } else {
       const exportCommand = isEnterpriseIndia
-        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
-        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token} ${endpoint}`;
+        ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${indiaToken} ${endpoint}`
+        : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`;
       
       await execShell(exportCommand);
     }

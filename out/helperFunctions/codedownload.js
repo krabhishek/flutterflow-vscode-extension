@@ -10,10 +10,15 @@ const downloadCode = async (config) => {
     vscode.window.showInformationMessage("Starting flutterflow code download...");
     const token = process.env.FLUTTERFLOW_API_TOKEN ||
         vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
+    const indiaToken = process.env.FLUTTERFLOW_API_TOKEN ||
+        vscode.workspace.getConfiguration("flutterflow").get("userApiTokenIndia");
     const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
         vscode.workspace.getConfiguration("flutterflow").get("activeProject");
     const useGit = process.env.FLUTTERFLOW_USE_GIT ||
         vscode.workspace.getConfiguration("flutterflow").get("useGit");
+    const isEnterpriseIndia = vscode.workspace
+        .getConfiguration("flutterflow")
+        .get("platformEnterpriseIndia");
     const openWindow = process.env.FLUTTERFLOW_OPEN_DIR ||
         vscode.workspace
             .getConfiguration("flutterflow")
@@ -44,11 +49,20 @@ const downloadCode = async (config) => {
             throw err;
         }
         await (0, executeShell_1.execShell)("dart pub global activate flutterflow_cli");
+        const endpoint = isEnterpriseIndia
+            ? "--endpoint 'https://api-enterprise-india.flutterflow.io/v1'" // Empty string for default endpoint
+            : ""; // Empty string for default endpoint
         if (config.withAssets == true) {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --include-assets --token ${token}`);
+            const exportCommand = isEnterpriseIndia
+                ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --include-assets --token ${indiaToken} ${endpoint}`
+                : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --include-assets --token ${token}`;
+            await (0, executeShell_1.execShell)(exportCommand);
         }
         else {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --no-include-assets --token ${token}`);
+            const exportCommand = isEnterpriseIndia
+                ? `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --no-include-assets --token ${indiaToken} ${endpoint}`
+                : `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --no-include-assets --token ${token}`;
+            await (0, executeShell_1.execShell)(exportCommand);
         }
         if (useGitFlag) {
             try {
