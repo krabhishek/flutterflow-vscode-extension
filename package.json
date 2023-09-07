@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/krabhishek/flutterflow-vscode-extension.git"
   },
-  "version": "0.0.7",
+  "version": "0.0.8",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -67,6 +67,10 @@
           "type": "string",
           "description": "Your FlutterFlow API Token. You can find it on your API token in your flutteflow account page."
         },
+        "flutterflow.userApiTokenIndia": {
+          "type": "string",
+          "description": "Your FlutterFlow India API Token. You can find it on your API token in your flutteflow account page."
+        },
         "flutterflow.activeProject": {
           "type": "string",
           "description": "Project ID of your flutterflow project to download."
@@ -74,6 +78,10 @@
         "flutterflow.baseDirectory": {
           "type": "string",
           "description": "Full path of base directory where you want the code to be saved."
+        },
+        "flutterflow.platformEnterpriseIndia":{
+          "type": "boolean",
+          "description": "Enable this if you are using FlutterFlow Enterprise India platform."
         },
         "flutterflow.useGit": {
           "type": "boolean",
