@@ -4,7 +4,6 @@ import { execShell } from "./executeShell";
 import {
   getProjectFolder,
   getProjectWorkingDir,
-  tmpDownloadFolder,
 } from "./pathHelpers";
 
 const downloadCode = async (config: { withAssets: boolean }) => {
@@ -52,11 +51,11 @@ const downloadCode = async (config: { withAssets: boolean }) => {
 
     if (config.withAssets === true) {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${getProjectWorkingDir()} --include-assets --token ${token} --no-parent-folder`
       );
     } else {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${getProjectWorkingDir()} --no-include-assets --token ${token} --no-parent-folder`
       );
     }
 

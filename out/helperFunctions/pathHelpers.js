@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.tmpDownloadFolder = exports.getProjectFolder = exports.validatePathConfig = exports.getProjectWorkingDir = void 0;
+exports.getProjectFolder = exports.validatePathConfig = exports.getProjectWorkingDir = void 0;
 const os = require("os");
 const vscode = require("vscode");
 const projectId = process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
@@ -27,7 +27,7 @@ function getProjectWorkingDir() {
     if (!validatePathConfig()) {
         return undefined;
     }
-    if (os.platform() == "win32") {
+    if (os.platform() === "win32") {
         console.log(`getProjectWorkingDir : ${baseDir}\\${getProjectFolder()} `);
         return `${baseDir}\\${getProjectFolder()}`;
     }
@@ -37,24 +37,11 @@ function getProjectWorkingDir() {
     }
 }
 exports.getProjectWorkingDir = getProjectWorkingDir;
-function tmpDownloadFolder() {
-    if (os.platform() == "win32") {
-        return `%TMP%\\flutterflow`;
-    }
-    else {
-        return `${os.tmpdir()}/flutterflow`;
-    }
-}
-exports.tmpDownloadFolder = tmpDownloadFolder;
 function getProjectFolder() {
     if (!validatePathConfig()) {
         return undefined;
     }
-    const re = /-/gi;
-    const folderName = projectId
-        .replace(re, "_")
-        .slice(0, projectId.lastIndexOf("-"));
-    return folderName;
+    return projectId;
 }
 exports.getProjectFolder = getProjectFolder;
 //# sourceMappingURL=pathHelpers.js.map

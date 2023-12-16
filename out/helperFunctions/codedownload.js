@@ -34,10 +34,10 @@ const downloadCode = async (config) => {
         }
         await (0, executeShell_1.execShell)("dart pub global activate flutterflow_cli");
         if (config.withAssets === true) {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --include-assets --token ${token}`);
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.getProjectWorkingDir)()} --include-assets --token ${token} --no-parent-folder`);
         }
         else {
-            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.tmpDownloadFolder)()} --no-include-assets --token ${token}`);
+            await (0, executeShell_1.execShell)(`dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${(0, pathHelpers_1.getProjectWorkingDir)()} --no-include-assets --token ${token} --no-parent-folder`);
         }
         if (openWindow === true) {
             const folderUri = vscode.Uri.file((0, pathHelpers_1.getProjectWorkingDir)());

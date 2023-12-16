@@ -34,7 +34,7 @@ function getProjectWorkingDir(): string | undefined {
     return undefined;
   }
 
-  if (os.platform() == "win32") {
+  if (os.platform() === "win32") {
     console.log(`getProjectWorkingDir : ${baseDir}\\${getProjectFolder()} `);
     return `${baseDir}\\${getProjectFolder()}`;
   } else {
@@ -43,28 +43,16 @@ function getProjectWorkingDir(): string | undefined {
   }
 }
 
-function tmpDownloadFolder(): string {
-  if (os.platform() == "win32") {
-    return `%TMP%\\flutterflow`;
-  } else {
-    return `${os.tmpdir()}/flutterflow`;
-  }
-}
 
 function getProjectFolder(): string | undefined {
   if (!validatePathConfig()) {
     return undefined;
   }
-  const re = /-/gi;
-  const folderName = projectId
-    .replace(re, "_")
-    .slice(0, projectId.lastIndexOf("-"));
-  return folderName;
+  return projectId;
 }
 
 export {
   getProjectWorkingDir,
   validatePathConfig,
   getProjectFolder,
-  tmpDownloadFolder,
 };
