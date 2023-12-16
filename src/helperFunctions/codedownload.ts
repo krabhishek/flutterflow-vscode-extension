@@ -6,12 +6,6 @@ import {
   getProjectWorkingDir,
   tmpDownloadFolder,
 } from "./pathHelpers";
-import {
-  gitStash,
-  initalizeGit,
-  isGitinitalized,
-  shouldStash,
-} from "./gitHelpers";
 
 const downloadCode = async (config: { withAssets: boolean }) => {
   vscode.window.showInformationMessage("Starting flutterflow code download...");
@@ -21,9 +15,6 @@ const downloadCode = async (config: { withAssets: boolean }) => {
   const projectId =
     process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
     vscode.workspace.getConfiguration("flutterflow").get("activeProject");
-  const useGit =
-    (process.env.FLUTTERFLOW_USE_GIT as unknown as boolean) ||
-    (vscode.workspace.getConfiguration("flutterflow").get("useGit") as boolean);
 
   const openWindow =
     (process.env.FLUTTERFLOW_OPEN_DIR as unknown as boolean) ||
@@ -31,12 +22,6 @@ const downloadCode = async (config: { withAssets: boolean }) => {
       .getConfiguration("flutterflow")
       .get("openDirectory") as boolean);
 
-  let useGitFlag;
-  if (useGit === undefined) {
-    useGitFlag = false;
-  } else {
-    useGitFlag = useGit;
-  }
 
   const path =
     process.env.FLUTTERFLOW_BASE_DIR ||
@@ -65,7 +50,7 @@ const downloadCode = async (config: { withAssets: boolean }) => {
     }
     await execShell("dart pub global activate flutterflow_cli");
 
-    if (config.withAssets == true) {
+    if (config.withAssets === true) {
       await execShell(
         `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
       );
@@ -75,40 +60,6 @@ const downloadCode = async (config: { withAssets: boolean }) => {
       );
     }
 
-    if (useGitFlag) {
-      try {
-        if (await shouldStash()) {
-          await gitStash();
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage("Could not stash current files");
-        vscode.window.showErrorMessage(err as string);
-      }
-    }
-
-    if (os.platform() == "win32") {
-      await execShell(
-        `xcopy /h /i /c /k /e /r /y  ${tmpDownloadFolder()}\\${getProjectFolder()} ${getProjectWorkingDir()}`
-      );
-      console.log("Copied all files");
-    } else {
-      await execShell(
-        `cp -rf "${tmpDownloadFolder()}/${getProjectFolder()}/" "${getProjectWorkingDir()}"`
-      );
-    }
-
-    if (useGitFlag) {
-      try {
-        if (!(await isGitinitalized())) {
-          await initalizeGit();
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage(
-          "Could initialize git in project directory"
-        );
-        vscode.window.showErrorMessage(err as string);
-      }
-    }
     if (openWindow === true) {
       const folderUri = vscode.Uri.file(getProjectWorkingDir()!);
       vscode.commands.executeCommand(`vscode.openFolder`, folderUri);

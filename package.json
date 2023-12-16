@@ -33,11 +33,6 @@
         "category": "FlutterFlow Code"
       },
       {
-        "command": "flutterflow-code-export.gitInitalize",
-        "title": "Initialize git in project working directory",
-        "category": "FlutterFlow Code"
-      },
-      {
         "command": "flutterflow-code-export.run",
         "title": "Start a flutter run session in integrated terminal",
         "category": "FlutterFlow Code"
@@ -74,10 +69,6 @@
         "flutterflow.baseDirectory": {
           "type": "string",
           "description": "Full path of base directory where you want the code to be saved."
-        },
-        "flutterflow.useGit": {
-          "type": "boolean",
-          "description": "Use git to track changes?"
         },
         "flutterflow.openDirectory": {
           "type": "boolean",
