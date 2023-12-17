@@ -1,29 +1,33 @@
 import * as vscode from "vscode";
-import * as os from "os";
 import { execShell } from "./executeShell";
 import {
-  getProjectFolder,
   getProjectWorkingDir,
-  tmpDownloadFolder,
 } from "./pathHelpers";
-import {
-  gitStash,
-  initalizeGit,
-  isGitinitalized,
-  shouldStash,
-} from "./gitHelpers";
 
 const downloadCode = async (config: { withAssets: boolean }) => {
   vscode.window.showInformationMessage("Starting flutterflow code download...");
-  const token =
+  let token =
     process.env.FLUTTERFLOW_API_TOKEN ||
     vscode.workspace.getConfiguration("flutterflow").get("userApiToken");
-  const projectId =
+
+    if(token ===  "" || token === undefined) {
+      const userInput = await vscode.window.showInputBox({
+        placeHolder: "Your FlutterFlow API token",
+        prompt: "Please enter your FlutterFlow API token",
+      });
+      token = userInput;
+    }
+  let projectId =
     process.env.FLUTTERFLOW_ACTIVE_PROJECT_ID ||
     vscode.workspace.getConfiguration("flutterflow").get("activeProject");
-  const useGit =
-    (process.env.FLUTTERFLOW_USE_GIT as unknown as boolean) ||
-    (vscode.workspace.getConfiguration("flutterflow").get("useGit") as boolean);
+
+    if(projectId ===  "" || projectId === undefined) {
+      const userInput = await vscode.window.showInputBox({
+        placeHolder: "Your FlutterFlow Project ID",
+        prompt: "Please enter your FlutterFlow project ID",
+      });
+      projectId = userInput;
+    }
 
   const openWindow =
     (process.env.FLUTTERFLOW_OPEN_DIR as unknown as boolean) ||
@@ -31,16 +35,19 @@ const downloadCode = async (config: { withAssets: boolean }) => {
       .getConfiguration("flutterflow")
       .get("openDirectory") as boolean);
 
-  let useGitFlag;
-  if (useGit === undefined) {
-    useGitFlag = false;
-  } else {
-    useGitFlag = useGit;
-  }
 
-  const path =
+  let path =
     process.env.FLUTTERFLOW_BASE_DIR ||
     vscode.workspace.getConfiguration("flutterflow").get("baseDirectory");
+
+    if(path ===  "" || path === undefined) {
+      const userInput = await vscode.window.showInputBox({
+        placeHolder: "Your FlutterFlow home directory",
+        prompt: "Please enter your FlutterFlow home directory",
+      });
+      path = userInput;
+    }
+
   try {
     if (token === "" || token === undefined) {
       vscode.window.showErrorMessage(
@@ -57,60 +64,23 @@ const downloadCode = async (config: { withAssets: boolean }) => {
       throw err;
     }
     if (path === "" || path === undefined) {
-      vscode.window.showErrorMessage(
-        "Your flutterflow working directory is not set. Please set in vscode settings."
-      );
-      const err = "FlutterFlow working directory not set";
+      const err = "FlutterFlow Home directory is not set";
       throw err;
     }
     await execShell("dart pub global activate flutterflow_cli");
 
-    if (config.withAssets == true) {
+    if (config.withAssets === true) {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${getProjectWorkingDir(projectId, path)} --include-assets --token ${token} --no-parent-folder`
       );
     } else {
       await execShell(
-        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${tmpDownloadFolder()} --no-include-assets --token ${token}`
+        `dart pub global run flutterflow_cli export-code --project ${projectId} --dest ${getProjectWorkingDir(projectId, path)} --no-include-assets --token ${token} --no-parent-folder`
       );
     }
 
-    if (useGitFlag) {
-      try {
-        if (await shouldStash()) {
-          await gitStash();
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage("Could not stash current files");
-        vscode.window.showErrorMessage(err as string);
-      }
-    }
-
-    if (os.platform() == "win32") {
-      await execShell(
-        `xcopy /h /i /c /k /e /r /y  ${tmpDownloadFolder()}\\${getProjectFolder()} ${getProjectWorkingDir()}`
-      );
-      console.log("Copied all files");
-    } else {
-      await execShell(
-        `cp -rf "${tmpDownloadFolder()}/${getProjectFolder()}/" "${getProjectWorkingDir()}"`
-      );
-    }
-
-    if (useGitFlag) {
-      try {
-        if (!(await isGitinitalized())) {
-          await initalizeGit();
-        }
-      } catch (err) {
-        vscode.window.showErrorMessage(
-          "Could initialize git in project directory"
-        );
-        vscode.window.showErrorMessage(err as string);
-      }
-    }
     if (openWindow === true) {
-      const folderUri = vscode.Uri.file(getProjectWorkingDir()!);
+      const folderUri = vscode.Uri.file(getProjectWorkingDir(projectId, path)!);
       vscode.commands.executeCommand(`vscode.openFolder`, folderUri);
     }
 

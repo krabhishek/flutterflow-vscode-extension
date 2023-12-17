@@ -8,7 +8,7 @@
     "type": "git",
     "url": "https://github.com/krabhishek/flutterflow-vscode-extension.git"
   },
-  "version": "0.0.7",
+  "version": "0.0.9",
   "engines": {
     "vscode": "^1.74.0"
   },
@@ -30,11 +30,6 @@
       {
         "command": "flutterflow-code-export.syncFast",
         "title": "Download project code without assets (faster)",
-        "category": "FlutterFlow Code"
-      },
-      {
-        "command": "flutterflow-code-export.gitInitalize",
-        "title": "Initialize git in project working directory",
         "category": "FlutterFlow Code"
       },
       {
@@ -74,10 +69,6 @@
         "flutterflow.baseDirectory": {
           "type": "string",
           "description": "Full path of base directory where you want the code to be saved."
-        },
-        "flutterflow.useGit": {
-          "type": "boolean",
-          "description": "Use git to track changes?"
         },
         "flutterflow.openDirectory": {
           "type": "boolean",

@@ -11,4 +11,4 @@ const execShell = (cmd: string) =>
     });
   });
 
-  export {execShell}
+  export {execShell};
